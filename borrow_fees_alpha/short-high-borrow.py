@@ -1,4 +1,4 @@
-# Copyright 2024 QuantRocket LLC - All Rights Reserved
+# Copyright QuantRocket LLC - All Rights Reserved
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ class ShortHighBorrow(Moonshot):
         borrow_fees = get_ibkr_borrow_fees_reindexed_like(closes)
         borrow_fee_ranks = borrow_fees.where(have_adequate_dollar_volumes).rank(axis=1, ascending=False, pct=True)
         short_signals = borrow_fee_ranks <= (self.BORROW_FEE_TOP_N_PCT / 100)
-        
+
         return -short_signals.astype(int)
 
     def signals_to_target_weights(self, signals: pd.DataFrame, prices: pd.DataFrame):

@@ -1,4 +1,4 @@
-# Copyright 2024 QuantRocket LLC - All Rights Reserved
+# Copyright QuantRocket LLC - All Rights Reserved
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -42,10 +42,10 @@ def make_pipeline():
     universe = master.SecuritiesMaster.usstock_SecurityType2.latest.eq("Common Stock")
 
     screen = AverageDollarVolume(window_length=90).percentile_between(50, 75)
-    
+
     if MAX_BORROW_FEE:
         screen &= (ibkr.BorrowFees.FeeRate.latest <= MAX_BORROW_FEE)
-    
+
     pipeline = Pipeline(
         initial_universe=universe,
         screen=screen
@@ -57,7 +57,7 @@ def rebalance(context: algo.Context, data: algo.BarData):
     Execute orders according to our schedule_function() timing.
     """
     desired_stocks = algo.pipeline_output('pipeline').index
-    
+
     positions = context.portfolio.positions
 
     # Exit positions we no longer want to hold
@@ -70,4 +70,3 @@ def rebalance(context: algo.Context, data: algo.BarData):
 
         # allocate 1/Nth of capital per asset
         algo.order_target_percent(asset, 1/len(desired_stocks), style=MarketOrder())
-        
